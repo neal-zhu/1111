@@ -1,5 +1,6 @@
 mod operator2;
 mod utils;
+use serde;
 
 #[cfg(feature = "gpu")]
 pub mod gpu;
