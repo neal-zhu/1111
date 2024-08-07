@@ -2,7 +2,6 @@ use std::{sync::Arc, time::Instant};
 
 use colored::*;
 use drillx::{
-    equix::{self},
     Hash, Solution,
     gpu::{drill_hash, gpu_init, set_noise},
     noise::NOISE,

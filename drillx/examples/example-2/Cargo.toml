@@ -1,0 +1,11 @@
+[package]
+name = "example-2"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "example-2"
+
+[dependencies]
+drillx = { path = "../../drillx", features = [] }
+tokio = { workspace = true }
