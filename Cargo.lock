@@ -1374,6 +1374,7 @@ dependencies = [
  "enum_dispatch",
  "num-traits",
  "num_enum 0.5.11",
+ "serde",
  "solana-program",
  "strum",
 ]
