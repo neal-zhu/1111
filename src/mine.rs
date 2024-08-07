@@ -87,16 +87,9 @@ impl Miner {
         unsafe {
             drill_hash(proof.challenge.as_ptr(), nonce.as_mut_ptr(), secs);
         }
-        println!("{nonce:?}");
     
         // Calculate hash
         let hx = drillx::hash(&challenge, &nonce);
-        println!(
-            "gpu found hash with difficulty {} in {} seconds: {}",
-            difficulty(hx),
-            timer.elapsed().as_secs(),
-            bs58::encode(hx).into_string(),
-        );
 
         // Update log
         progress_bar.finish_with_message(format!(

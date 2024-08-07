@@ -7,9 +7,7 @@ mod close;
 mod config;
 mod cu_limits;
 use drillx::{
-    equix::{self},
-    Hash, Solution,
-    gpu::{drill_hash, gpu_init, set_noise},
+    gpu::{gpu_init, set_noise},
     noise::NOISE,
 };
 #[cfg(feature = "admin")]
