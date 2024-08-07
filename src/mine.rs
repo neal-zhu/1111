@@ -4,6 +4,8 @@ use colored::*;
 use drillx::{
     equix::{self},
     Hash, Solution,
+    gpu::{drill_hash, gpu_init, set_noise},
+    noise::NOISE,
 };
 use ore_api::{
     consts::{BUS_ADDRESSES, BUS_COUNT, EPOCH_DURATION},
@@ -80,72 +82,21 @@ impl Miner {
         // Dispatch job to each thread
         let progress_bar = Arc::new(spinner::new_progress_bar());
         progress_bar.set_message("Mining...");
-        let handles: Vec<_> = (0..threads)
-            .map(|i| {
-                std::thread::spawn({
-                    let proof = proof.clone();
-                    let progress_bar = progress_bar.clone();
-                    let mut memory = equix::SolverMemory::new();
-                    move || {
-                        let timer = Instant::now();
-                        let mut nonce = u64::MAX.saturating_div(threads).saturating_mul(i);
-                        let mut best_nonce = nonce;
-                        let mut best_difficulty = 0;
-                        let mut best_hash = Hash::default();
-                        loop {
-                            // Create hash
-                            if let Ok(hx) = drillx::hash_with_memory(
-                                &mut memory,
-                                &proof.challenge,
-                                &nonce.to_le_bytes(),
-                            ) {
-                                let difficulty = hx.difficulty();
-                                if difficulty.gt(&best_difficulty) {
-                                    best_nonce = nonce;
-                                    best_difficulty = difficulty;
-                                    best_hash = hx;
-                                }
-                            }
-
-                            // Exit if time has elapsed
-                            if nonce % 100 == 0 {
-                                if timer.elapsed().as_secs().ge(&cutoff_time) {
-                                    if best_difficulty.gt(&min_difficulty) {
-                                        // Mine until min difficulty has been met
-                                        break;
-                                    }
-                                } else if i == 0 {
-                                    progress_bar.set_message(format!(
-                                        "Mining... ({} sec remaining)",
-                                        cutoff_time.saturating_sub(timer.elapsed().as_secs()),
-                                    ));
-                                }
-                            }
-
-                            // Increment nonce
-                            nonce += 1;
-                        }
-
-                        // Return the best nonce
-                        (best_nonce, best_difficulty, best_hash)
-                    }
-                })
-            })
-            .collect();
-
-        // Join handles and return best nonce
-        let mut best_nonce = 0;
-        let mut best_difficulty = 0;
-        let mut best_hash = Hash::default();
-        for h in handles {
-            if let Ok((nonce, difficulty, hash)) = h.join() {
-                if difficulty > best_difficulty {
-                    best_difficulty = difficulty;
-                    best_nonce = nonce;
-                    best_hash = hash;
-                }
-            }
+        let secs = 5;
+        let mut nonce = [0; 8];
+        unsafe {
+            drill_hash(proof.challenge.as_ptr(), nonce.as_mut_ptr(), secs);
         }
+        println!("{nonce:?}");
+    
+        // Calculate hash
+        let hx = drillx::hash(&challenge, &nonce);
+        println!(
+            "gpu found hash with difficulty {} in {} seconds: {}",
+            difficulty(hx),
+            timer.elapsed().as_secs(),
+            bs58::encode(hx).into_string(),
+        );
 
         // Update log
         progress_bar.finish_with_message(format!(
@@ -154,7 +105,7 @@ impl Miner {
             best_difficulty
         ));
 
-        Solution::new(best_hash.d, best_nonce.to_le_bytes())
+        Solution::new(hx, nonce)
     }
 
     pub fn check_num_cores(&self, threads: u64) {

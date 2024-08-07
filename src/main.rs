@@ -6,6 +6,12 @@ mod claim;
 mod close;
 mod config;
 mod cu_limits;
+use drillx::{
+    equix::{self},
+    Hash, Solution,
+    gpu::{drill_hash, gpu_init, set_noise},
+    noise::NOISE,
+};
 #[cfg(feature = "admin")]
 mod initialize;
 mod mine;
@@ -182,6 +188,10 @@ impl Miner {
         priority_fee: u64,
         keypair_filepath: Option<String>,
     ) -> Self {
+        unsafe {
+            gpu_init();
+            set_noise(NOISE.as_usize_slice().as_ptr());
+        }
         Self {
             rpc_client,
             keypair_filepath,
