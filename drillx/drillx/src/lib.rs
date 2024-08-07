@@ -34,7 +34,6 @@ pub fn hash(challenge: &[u8; 32], nonce: &[u8; 8]) -> [u8; 32] {
     println!("hash in {} nanos\n", timer.elapsed().as_nanos());
     x
 }
-
 /// The result of a drillx hash
 #[derive(Default)]
 pub struct Hash {
