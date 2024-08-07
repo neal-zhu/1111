@@ -39,16 +39,6 @@ pub use equix;
 #[cfg(not(feature = "solana"))]
 use sha3::Digest;
 
-/// Generates a new drillx hash from a challenge and nonce.
-#[inline(always)]
-pub fn hash(challenge: &[u8; 32], nonce: &[u8; 8]) -> Result<Hash, DrillxError> {
-    let digest = digest(challenge, nonce)?;
-    Ok(Hash {
-        d: digest,
-        h: hashv(&digest, nonce),
-    })
-}
-
 /// Generates a new drillx hash from a challenge and nonce using pre-allocated memory.
 #[inline(always)]
 pub fn hash_with_memory(
