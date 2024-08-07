@@ -2,6 +2,7 @@
 use std::time::Instant;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use solana_program;
 
 use crate::noise::NOISE;
 
