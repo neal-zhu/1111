@@ -64,19 +64,19 @@ impl Solution {
         }
     }
 
-    /// Returns true if the solution is valid
-    pub fn is_valid(&self, challenge: &[u8; 32]) -> bool {
-        is_valid_digest(challenge, &self.n, &self.d)
-    }
+    ///// Returns true if the solution is valid
+    //pub fn is_valid(&self, challenge: &[u8; 32]) -> bool {
+    //    is_valid_digest(challenge, &self.n, &self.d)
+    //}
 
-    /// Calculates the result hash for a given solution
-    pub fn to_hash(&self) -> Hash {
-        let mut d = self.d;
-        Hash {
-            d: self.d,
-            h: hashv(&mut d, &self.n),
-        }
-    }
+    ///// Calculates the result hash for a given solution
+    //pub fn to_hash(&self) -> Hash {
+    //    let mut d = self.d;
+    //    Hash {
+    //        d: self.d,
+    //        h: hashv(&mut d, &self.n),
+    //    }
+    //}
 }
 
 #[derive(Debug)]
