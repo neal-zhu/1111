@@ -1372,10 +1372,11 @@ version = "0.1.0"
 dependencies = [
  "cc",
  "enum_dispatch",
+ "equix",
  "num-traits",
  "num_enum 0.5.11",
  "serde",
- "solana-program",
+ "sha3 0.10.8",
  "strum",
 ]
 
