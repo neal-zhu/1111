@@ -90,14 +90,15 @@ impl Miner {
         // Calculate hash
         let hx = drillx::hash(&proof.challenge, &nonce);
 
+        sol = Solution::new(hx, nonce);
+
         // Update log
         progress_bar.finish_with_message(format!(
             "Best hash: {} (difficulty: {})",
             bs58::encode(hx).into_string(),
-            best_difficulty
         ));
 
-        Solution::new(hx, nonce)
+        sol
     }
 
     pub fn check_num_cores(&self, threads: u64) {
