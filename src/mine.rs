@@ -88,12 +88,12 @@ impl Miner {
         }
     
         // Calculate hash
-        let hx = drillx::hash(&challenge, &nonce);
+        let hx = drillx::hash(&proof.challenge, &nonce);
 
         // Update log
         progress_bar.finish_with_message(format!(
             "Best hash: {} (difficulty: {})",
-            bs58::encode(best_hash.h).into_string(),
+            bs58::encode(hx).into_string(),
             best_difficulty
         ));
 
