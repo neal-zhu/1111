@@ -17,7 +17,7 @@ name = "drillx"
 [features]
 compiler = ["equix/compiler"]
 full = ["equix/full"]
-solana = ["solana-program"]
+solana = []
 default = []
 benchmark = []
 gpu = ["cc"]
@@ -26,7 +26,7 @@ gpu = ["cc"]
 sha3 = { workspace = true }
 equix = { workspace = true }
 serde = { workspace = true }
-solana-program = { workspace = true, optional = true}
+solana-program = { version = "2.0.4" }
 strum = { workspace = true }
 
 enum_dispatch = { workspace = true }
